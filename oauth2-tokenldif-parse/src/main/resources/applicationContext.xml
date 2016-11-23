@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC  "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+    <bean id="oauth2TokenDao" class="com.myprojects.ci.ldifparse.OAuth2TokenMysqlDaoImpl">
+    </bean>
+
+    <bean id="oauth2TokenParser" class="com.myprojects.ci.ldifparse.OAuth2TokenParserNew">
+        <property name="oauth2TokenDao"  ref="oauth2TokenDao" />
+    </bean>
+
+    <bean id="accessLogDao" class="com.myprojects.ci.accesslogparser.AccessLogDaoImpl">
+    </bean>
+        <bean id="accessLogParser" class="com.myprojects.ci.accesslogparser.AccessLogParserImpl">
+        <property name="accessLogDao"  ref="accessLogDao" />
+    </bean>
+</beans>
