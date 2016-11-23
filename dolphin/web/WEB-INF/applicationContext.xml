@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC  "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+		           <list>
+		               <value>file:${dolphin.dir}</value>
+						<!-- <value>classpath:resources/dolphin.properties</value>  -->		               
+		           </list>
+		</property>
+	</bean>
+
+ 	<bean id="memcachedClient" class="net.spy.memcached.spring.MemcachedClientFactoryBean">
+       <property name="servers" value="${memacahed_server}"/>  
+      <!--   <property name="servers" value="10.135.25.78:11211"/>  -->
+        <property name="protocol" value="BINARY"/>
+        <property name="transcoder">
+            <bean class="net.spy.memcached.transcoders.SerializingTranscoder">
+                <property name="compressionThreshold" value="1024"/>
+            </bean>
+        </property>
+        <property name="opTimeout" value="1000"/>
+        <property name="timeoutExceptionThreshold" value="1998"/>
+        <!-- 
+        <property name="hashAlg" value="KETAMA_HASH"/>
+        <property name="locatorType" value="CONSISTENT"/>
+        <property name="failureMode" value="Redistribute"/>
+        <property name="useNagleAlgorithm" value="false"/>
+         -->
+    </bean>
+    
+     <bean id="cacheMgr"
+		  class="com.dolphin.webapp.cache.MemcachedManager">
+        <property name="memcachedClient" ref="memcachedClient" />
+	</bean>
+ 	<!-- 
+	  <bean id="cacheMgr"
+		  class="com.dolphin.webapp.cache.LocalCacheManager">
+        <property name="oscacheAdmin" ref="oscacheAdmin" />
+	</bean>
+	 	 -->
+	<bean id="oscacheAdmin"
+		  class="com.opensymphony.oscache.general.GeneralCacheAdministrator"/>
+		  
+	<bean id="localCacheMgr"
+		  class="com.dolphin.webapp.cache.LocalCacheManager">
+        <property name="oscacheAdmin" ref="oscacheAdmin" />
+	</bean>
+		       
+	<bean
+		id="loginMgr"
+		class="com.dolphin.webapp.biz.LoginMgrImpl" >
+        <property name="userDao" ref="userDao" />		
+	</bean>
+	
+	<bean
+		id="pubMgr"
+		class="com.dolphin.webapp.biz.PublicMgrImpl" >
+        <property name="pubDao" ref="pubDao" />
+        <property name="cacheMgr" ref="cacheMgr" />
+        <property name="localCacheMgr" ref="localCacheMgr" />
+	</bean>	
+	
+	<bean id="adsMgr" class="com.dolphin.webapp.biz.AdsMgrImpl">
+		<property name="pubMgr" ref="pubMgr" />
+		<property name="cacheMgr" ref="cacheMgr" />
+        <property name="adsDao" ref="adsDao" />
+        <property name="instanceID" value="${tomcat_instanceID}" />
+        <!-- 
+        <property name="adsProviderURL" value="${ads_providerURL}" />
+        <property name="plainPassword" value="${ads_passowrd}" />
+        <property name="maxResult" value="${ads_maxresult}" />
+         -->
+	</bean>
+
+	<bean id="loadAdsData"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="adsMgr" />
+		<property name="targetMethod" value="autoLoadAds" />
+	</bean>
+
+	<bean id="autoLoadAdsDataTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="loadAdsData" />
+		<property name="cronExpression" value="${getadsjob_expression}" />
+	</bean>
+	
+	<bean id="commitAdsData"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="adsMgr" />
+		<property name="targetMethod" value="commitAds" />
+	</bean>
+
+	<bean id="commitAdsDataTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="commitAdsData" />
+		<property name="cronExpression" value="${commitadsjob_expression}" />
+	</bean>
+		
+	<bean id="addTestAdsData"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="adsMgr" />
+		<property name="targetMethod" value="addTestData" />
+	</bean>
+
+	<bean id="addTestDataTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="addTestAdsData" />
+		<property name="cronExpression" value="${addtestadsjob_expression}" />
+	</bean>
+			
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	  <property name="triggers">
+	    <list>
+	      <ref local="autoLoadAdsDataTrigger"/>
+	      <ref local="commitAdsDataTrigger"/>
+	      <ref local="addTestDataTrigger"/>
+	    </list>
+	  </property>
+	</bean>
+
+	<bean
+		id="scriptMgr"
+		class="com.dolphin.webapp.biz.ScriptMgrImpl" >
+        <property name="scriptDao" ref="scriptDao" />
+	</bean>
+	<bean
+		id="appMgr"
+		class="com.dolphin.webapp.biz.AppMgrImpl" >
+        <property name="appDao" ref="appDao" />
+        <property name="cacheMgr" ref="cacheMgr" />
+	</bean>	
+	<bean
+		id="ruleMgr"
+		class="com.dolphin.webapp.biz.RuleMgrImpl" >
+        <property name="ruleDao" ref="ruleDao" />
+        <property name="accessDao" ref="accessDao" />
+        <property name="cacheMgr" ref="cacheMgr" />
+        <property name="appMgr" ref="appMgr" />
+		 <property name="pubMgr" ref="pubMgr" />
+	</bean>		
+	<bean
+		id="accessMgr"
+		class="com.dolphin.webapp.biz.AccessMgrImpl" >
+        <property name="accessDao" ref="accessDao" />
+        <property name="appMgr" ref="appMgr" />
+        <property name="ruleMgr" ref="ruleMgr" />
+        <property name="scriptMgr" ref="scriptMgr" />
+		 <property name="pubMgr" ref="pubMgr" />
+		 <property name="adsMgr" ref="adsMgr" />	
+        <property name="cacheMgr" ref="cacheMgr" />
+	</bean>	
+	
+</beans>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<resultMap id="App"
+		class="com.dolphin.webapp.vo.App">
+		<result property="appID" column="appID" />
+		<result property="appcode" column="appcode" />
+		<result property="appdesc" column="appdesc" />
+		<result property="apptype" column="apptype" />
+		<result property="version" column="version" />
+		<result property="charge" column="charge" />
+		<result property="appfilename" column="appfilename" />
+		<result property="status" column="status" />
+		<result property="creator" column="creator" />
+		<result property="createTime" column="createTime" javaType="java.util.Date" />
+		<result property="updater" column="updater" />
+		<result property="updateTime" column="updateTime" javaType="java.util.Date" />
+	</resultMap>
+	
+	<resultMap id="AppFile" class="com.dolphin.webapp.vo.AppFile">
+		<result property="appID" column="appID" />
+		<result property="appfilename" column="appfilename" />
+		<result property="appstream" column="appstream" typeHandler="org.springframework.orm.ibatis.support.BlobByteArrayTypeHandler" />
+   	</resultMap>
+   	
+    <select id="findAppByPK" resultMap="App">
+      <![CDATA[
+	    select
+	    appID,appcode,appdesc,apptype,version,charge,status,appfilename,creator,createTime,updater,updateTime
+	    from t_app
+	    where appID = #appID#                       
+		]]>
+    </select>	
+    
+    <select id="getAppByCode" resultMap="App">
+      <![CDATA[
+	    select
+	    appID,appcode,appdesc,apptype,version,charge,status,appfilename,creator,createTime,updater,updateTime
+	    from t_app
+	    where appcode = #appcode# and status not in ('Delete') 
+		]]>
+    </select>	
+        
+    <select id="listAllApp" resultMap="App">
+      <![CDATA[
+	    select
+	    appID,appcode,appdesc,apptype,version,charge,status,appfilename,creator,createTime,updater,updateTime
+	    from t_app where status not in ('Delete')
+		]]>
+    </select>	
+    
+	<insert id="insertApp" parameterClass="com.dolphin.webapp.vo.App">
+		INSERT INTO t_app (appcode,appdesc,apptype,version,charge,status,creator,createTime,updater,updateTime)
+		 VALUES (#appcode#,#appdesc#,#apptype#,#version#,#charge#,#status#,#creator#,#createTime#,#updater#,#updateTime#)
+	   	<selectKey resultClass="int" keyProperty="appID" > 
+			SELECT @@IDENTITY AS appID 
+	   	</selectKey> 
+	</insert>    
+	
+	<update id="uploadAppFile" parameterClass="com.dolphin.webapp.vo.AppFile">
+			UPDATE t_app SET appfilename=#appfilename#,appstream= #appstream,handler=org.springframework.orm.ibatis.support.BlobByteArrayTypeHandler# 
+		 	WHERE AppID = #appID#
+	</update>    
+		
+	<update id="removeAppFile">
+			UPDATE t_app SET appfilename=null,appstream= null 
+		 	WHERE AppID = #appID#
+	</update>   
+	
+    <select id="getAppFile" resultMap="AppFile">
+      <![CDATA[
+	    select
+	    appID,appfilename,creator,appstream
+	    from t_app WHERE AppID = #appID#      
+		]]>
+    </select>  
+    
+	<update id="updateApp" parameterClass="com.dolphin.webapp.vo.App">
+		UPDATE t_app SET appcode=#appcode#,appdesc=#appdesc#,apptype=#apptype#,version=#version#,charge=#charge#,
+				status=#status#,updater=#updater#,updateTime=#updateTime#
+		 WHERE AppID = #appID#
+	</update>  
+	
+    <delete id="deleteAppByPK">
+		DELETE from t_App
+		WHERE appID = #appID#      
+   	</delete>
+    
+</sqlMap>

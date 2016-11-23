@@ -1,0 +1,1 @@
+﻿INSERT INTO t_phone_tmp (phoneprefix,city) VALUES('1031212','上海市');

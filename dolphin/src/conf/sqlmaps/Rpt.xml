@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<resultMap id="PhoneCharge"
+		class="com.dolphin.webapp.vo.PhoneCharge">
+		<result property="chargeID" column="chargeID" />
+		<result property="imsi" column="imsi" />
+		<result property="producttype" column="producttype" />
+		<result property="version" column="version" />
+		<result property="province" column="province" />
+		<result property="city" column="city" />
+		<result property="mobile" column="mobile" />
+		<result property="linkid" column="linkid" />
+		<result property="receivetime" column="receivetime" />
+		<result property="content" column="content" />
+	</resultMap>
+		 
+    
+    <select id="listConfirmCharge" parameterClass="com.dolphin.webapp.vo.ConfirmChargeRptSearchVO" resultMap="PhoneCharge">
+    	select * from (
+		select chargeID,mobile,linkid,receivetime,content,b.imsi,
+				b.producttype,b.version,b.province,b.city
+		from t_phone_charge a
+		left join t_access b
+		on a.linkid = b.accessid
+	   <dynamic prepend="WHERE">
+	      <isNotNull prepend="AND" property="imsi">
+	        	imsi = #imsi#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="mobile">
+	        	respstatus = #mobile#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="version">
+	        	version = #version#
+	      </isNotNull>	      
+	      <isNotNull prepend="AND" property="province">
+	        	province = #province#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="city">
+	        	city = #city#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="yearmonth">
+	        	accesstimeym = #yearmonth#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="beginUpdateTime">
+	        	updatetime &gt;= #beginUpdateTime#
+	      </isNotNull>   	    
+	       <isNotNull prepend="AND" property="endUpdateTime">
+	        	updatetime &lt;= #endUpdateTime#
+	      </isNotNull> 
+	    </dynamic>
+	 	 order by updatetime desc
+	 	 ) c LIMIT 0, #maxlimit#
+    </select>	    
+    
+    
+</sqlMap>

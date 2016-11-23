@@ -1,0 +1,1 @@
+﻿INSERT INTO t_phone_num2 (phoneprefix,citycode, city,simtype) VALUES('1031212','default','上海市','default');

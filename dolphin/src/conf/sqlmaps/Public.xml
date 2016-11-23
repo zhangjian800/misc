@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	
+	<resultMap id="versions" class="java.util.HashMap">
+	   <result property="versioncode" column="versioncode"/>
+	   <result property="versiondesc" column="versiondesc"/>
+	</resultMap>
+
+	<resultMap id="products" class="com.dolphin.webapp.vo.PhoneProduct">
+	   <result property="productcode" column="productcode"/>
+	   <result property="productdesc" column="productdesc"/>
+	   <result property="version" column="version"/>
+	   <result property="status" column="status"/>
+	</resultMap>
+	   
+	<resultMap id="provinces" class="java.util.HashMap">
+	   <result property="provicecode" column="provicecode"/>
+	   <result property="provicedesc" column="provicedesc"/>
+	</resultMap>
+		
+	<resultMap id="cities" class="java.util.HashMap">
+	   <result property="citycode" column="citycode"/>
+	   <result property="citydesc" column="citydesc"/>
+	</resultMap>
+	<resultMap id="PhoneNumType"
+		class="com.dolphin.webapp.vo.PhoneNumType">
+		<result property="phonePrefix" column="phonePrefix" />
+		<result property="citycode" column="citycode" />
+		<result property="simType" column="simType" />
+		<result property="provincecode" column="provincecode" />
+	</resultMap>
+
+	<resultMap id="SystemConfig" class="com.dolphin.webapp.vo.SystemConfig">
+	   <result property="confID" column="confID"/>
+	   <result property="confCode" column="confcode"/>
+	   <result property="maxMonthhits" column="maxmonthhits"/>
+	   <result property="maxMonthCharge" column="maxmonthcharge"/>
+	   <result property="defaultIntevalDays" column="defaultintevalDays"/>
+	   <result property="blockIntevalDays" column="blockintervaldays"/>
+	   <result property="begintime" column="begintime"/>
+	   <result property="endtime" column="endtime"/>
+	   <result property="isblockworkingtime" column="isblockworkingtime"/> <!-- means allow -->
+	   <result property="maxadsbuffersize" column="maxadsbuffersize"/>
+	   <result property="defaultAdsIntevalMins" column="defautinteval4noads"/>
+	   <result property="sizeofpercall" column="sizeofpercall"/>
+	   <result property="maxadsdata" column="maxadsdata"/>
+	   
+	   <result property="chargebegintime" column="chargebegintime"/>
+	   <result property="chargeendtime" column="chargeendtime"/>
+	   <result property="filternonworkingtime4charge" column="filternonworkingtime4charge"/> 
+	   <result property="env" column="env"/> 
+	</resultMap>
+
+    <select id="getSystemConfig" resultMap="SystemConfig">
+      <![CDATA[
+	    select
+		confID,confcode,maxmonthhits,maxmonthcharge,defaultintevalDays,blockintervaldays,begintime,endtime, isblockworkingtime,
+		maxadsbuffersize,defautinteval4noads,sizeofpercall,maxadsdata,chargebegintime,chargeendtime,filternonworkingtime4charge,env
+		from t_system_conf
+	    where confcode = 'SYSTEM_RULE'
+		]]>
+    </select>	
+    
+	<update id="updateSystemConfig" parameterClass="com.dolphin.webapp.vo.SystemConfig">
+		UPDATE t_system_conf SET maxmonthhits=#maxMonthhits#,maxmonthcharge=#maxMonthCharge#,
+								 defaultintevalDays=#defaultIntevalDays#,blockintervaldays=#blockIntevalDays#,
+								 begintime=#begintime#,endtime=#endtime#, isblockworkingtime=#isblockworkingtime#, maxadsbuffersize = #maxadsbuffersize#,
+								 defautinteval4noads = #defaultAdsIntevalMins#,sizeofpercall=#sizeofpercall#,maxadsdata=#maxadsdata#,env=#env#,
+								  chargebegintime = #chargebegintime#,chargeendtime=#chargeendtime#,filternonworkingtime4charge=#filternonworkingtime4charge#
+		 WHERE confID = #confID# and confcode = 'SYSTEM_RULE'
+	</update>    
+	   
+	<insert id="insertPhoneProduct" parameterClass="com.dolphin.webapp.vo.PhoneProduct">
+		INSERT INTO t_phone_product (productcode,productdesc,version )
+		 values (#productcode#,#productdesc#,#version#)
+	</insert>
+    
+
+
+    <select id="findPhoneNumTypeByPrefix" resultMap="PhoneNumType">
+      <![CDATA[
+	    select
+		phonePrefix,a.citycode,simType,b.provicecode provincecode
+	    from t_phone_num a, t_city b
+	    where phonePrefix = #phonePrefix# and a.citycode = b.citycode
+		]]>
+    </select>	
+        
+    <select id="listAllPhoneNumTypes" resultMap="PhoneNumType">
+      <![CDATA[
+		    select
+			phonePrefix,a.citycode,simType,b.provicecode provincecode
+		    from t_phone_num a, t_city b
+		    where a.citycode = b.citycode
+		]]>
+    </select>	
+            
+    <select id="listAllVersions" resultMap="versions">
+      <![CDATA[
+	    select
+	     versioncode, versiondesc
+	    from t_version where status = 'Enable'
+		]]>
+    </select>	
+   
+     <select id="listAllProducts"  resultMap="products">
+      <![CDATA[
+	    select
+	    productcode, productdesc, version, status
+	    from t_phone_product
+		]]>
+    </select>	
+    
+    <select id="listAllProvinces"  resultMap="provinces">
+      <![CDATA[
+	    select
+	    provicecode, provicedesc
+	    from t_province
+		]]>
+    </select>
+        
+    <select id="listAllCitiesByProvinces"  resultMap="cities">
+      <![CDATA[
+	    select
+	    provicecode, citycode, citydesc
+	    from t_city where provicecode = #provicecode#
+		]]>
+    </select>
+</sqlMap>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<resultMap id="Script"
+		class="com.dolphin.webapp.vo.Script">
+		<result property="scriptID" column="scriptID" />
+		<result property="scriptCode" column="scriptcode" />
+		<result property="scriptDesc" column="scriptdesc" />
+		<result property="scriptcontent" column="scriptcontent" />
+		<result property="creator" column="creator" />
+		<result property="createTime" column="createTime" javaType="java.util.Date" />
+		<result property="updater" column="updater" />
+		<result property="updateTime" column="updateTime" javaType="java.util.Date" />
+	</resultMap>	
+	
+    <select id="findScriptByPK" resultMap="Script">
+      <![CDATA[
+	    select
+	    scriptID,scriptCode,scriptDesc,scriptcontent,creator,createTime,updater,updateTime
+	    from t_script
+	    where scriptID = #scriptID#                       
+		]]>
+    </select>	
+    
+    <select id="getScriptByCode" resultMap="Script">
+      <![CDATA[
+	    select
+	    scriptID,scriptCode,scriptDesc,scriptcontent,creator,createTime,updater,updateTime
+	    from t_script
+	    where scriptCode = #scriptCode#                       
+		]]>
+    </select>	
+        
+    <select id="listAllScript" resultMap="Script">
+      <![CDATA[
+	    select
+	    scriptID,scriptCode,scriptDesc,scriptcontent,creator,createTime,updater,updateTime
+	    from t_script       
+		]]>
+    </select>	
+    
+	<insert id="insertScript" parameterClass="com.dolphin.webapp.vo.Script">
+		INSERT INTO t_script (scriptCode,scriptDesc,scriptcontent,creator,createTime,updater,updateTime)
+		 VALUES (#scriptCode#,#scriptDesc#,#scriptcontent#,#creator#,#createTime#,#updater#,#updateTime#)
+	   	<selectKey resultClass="int" keyProperty="scriptID" > 
+			SELECT @@IDENTITY AS scriptID 
+	   	</selectKey> 
+	</insert>    
+	
+	<update id="updateScript" parameterClass="com.dolphin.webapp.vo.Script">
+		UPDATE t_script SET scriptCode=#scriptCode#,scriptDesc=#scriptDesc#, scriptcontent = #scriptcontent#, updater=#updater#,updateTime=#updateTime#
+		 WHERE scriptID = #scriptID#
+	</update>  
+	
+    <delete id="deleteScriptByPK">
+		DELETE from t_script
+		WHERE scriptID = #scriptID#      
+   	</delete>
+    
+</sqlMap>

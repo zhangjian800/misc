@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<resultMap id="Rule"
+		class="com.dolphin.webapp.vo.Rule">
+		<result property="ruleID" column="ruleID" />
+		<result property="ruletype" column="ruletype" />
+		<result property="rulecode" column="rulecode" />
+		<result property="province" column="province" />
+		<result property="city" column="city" />
+		<result property="productcode" column="productcode" />
+		<result property="version" column="version" />
+		<result property="serviceprovider" column="serviceprovider" />
+		<result property="pid" column="pid" />
+		<result property="gapdays" column="gapdays" />		
+		<result property="interval" column="intervalday" />
+		<result property="appID" column="appID" />	
+		<result property="status" column="status" />
+		<result property="dailychargelimit" column="dailychargelimit" />	
+		<result property="monthlychargelimit" column="monthlychargelimit" />		
+		<result property="creator" column="creator" />
+		<result property="createTime" column="createTime" javaType="java.util.Date" />
+		<result property="updater" column="updater" />
+		<result property="updateTime" column="updateTime" javaType="java.util.Date" />
+		<result property="apptype" column="apptype" />
+	</resultMap>	
+    
+	<resultMap id="RuleMonthlyAccessSum"
+		class="com.dolphin.webapp.vo.RuleAccessMonthlyCharge">
+		<result property="ruleID" column="ruleID" />
+		<result property="yearmonth" column="yearmonth" />
+		<result property="hitssum" column="hitssum" />
+		<result property="chargesum" column="chargesum" />
+		<result property="status" column="status"/>
+		<result property="updatetime" column="updatetime" javaType="java.util.Date" />
+		<result property="dataversion" column="dataversion" />
+	</resultMap>	
+	
+	<resultMap id="RuleDailyAccessSum"
+		class="com.dolphin.webapp.vo.RuleAccessDailyCharge">
+		<result property="ruleID" column="ruleID" />
+		<result property="ruledesc" column="ruledesc" />
+		<result property="currdate" column="currdate" />
+		<result property="hitssum" column="hitssum" />
+		<result property="chargesum" column="chargesum" />
+		<result property="status" column="status"/>
+		<result property="updatetime" column="updatetime" javaType="java.util.Date" />
+		<result property="dataversion" column="dataversion" />
+	</resultMap>	
+	
+		
+    <select id="findRuleByPK" resultMap="Rule">
+      <![CDATA[
+	    select
+	    ruleID, rulecode, ruletype, province,city,productcode,serviceprovider,version,pid,gapdays,intervalday,dailychargelimit,monthlychargelimit,
+	    appID,creator,createTime,updater,updateTime,status,apptype
+	    from t_rule
+	    where ruleID = #ruleID#                        
+		]]>
+    </select>	
+    
+    <select id="listRulesByRuleCode" resultMap="Rule">
+      <![CDATA[
+	    select
+	    ruleID, rulecode, ruletype, province,city,productcode,serviceprovider,version,pid,gapdays,intervalday,dailychargelimit,monthlychargelimit,
+	    appID,creator,createTime,updater,updateTime,status
+	     from t_rule
+	    where rulecode = #rulecode# and status not in ('Delete') 
+		]]>
+    </select>	
+        
+    <select id="listAllRule" resultMap="Rule">
+      <![CDATA[
+	    select
+	    ruleID, rulecode, ruletype, province,city,productcode,serviceprovider,version,pid,gapdays,intervalday,dailychargelimit,monthlychargelimit,
+	    appID,creator,createTime,updater,updateTime,status,apptype
+	    from t_rule where status not in ('Delete')   
+		]]>
+    </select>	
+    
+	<insert id="insertRule" parameterClass="com.dolphin.webapp.vo.Rule">
+		INSERT INTO t_rule (rulecode, ruletype, province,city,productcode,serviceprovider,version,pid,gapdays,intervalday,appID,status,dailychargelimit,monthlychargelimit,creator,createTime,updater,updateTime,apptype)
+		 VALUES (#rulecode#, #ruletype#, #province#,#city#,#productcode#,#serviceprovider#,#version#,#pid#,#gapdays#,#interval#,#appID#,#status#,#dailychargelimit#,#monthlychargelimit#,#creator#,#createTime#,#updater#,#updateTime#,#apptype#)
+	   	<selectKey resultClass="int" keyProperty="ruleID" > 
+			SELECT @@IDENTITY AS ruleID 
+	   	</selectKey> 
+	</insert>    
+	
+	<update id="updateRule" parameterClass="com.dolphin.webapp.vo.Rule">
+		UPDATE t_rule SET rulecode=#rulecode#,ruletype=#ruletype#,province=#province#,city=#city#, productcode=#productcode#,serviceprovider=#serviceprovider#,dailychargelimit=#dailychargelimit#,monthlychargelimit=#monthlychargelimit#,
+			version=#version#,pid=#pid#, gapdays=#gapdays#,intervalday=#interval#,appID=#appID#,status=#status#,updater=#updater#,updateTime=#updateTime#,apptype=#apptype#
+		 WHERE RuleID = #ruleID#
+	</update>  
+	
+    <delete id="deleteRuleByPK">
+		DELETE from t_rule
+		WHERE RuleID = #ruleID#      
+   	</delete>
+   	
+	<select id="listRulesBySearchCritiria" parameterClass="com.dolphin.webapp.vo.RuleSearchVO" resultMap="Rule" >
+	 select * from (
+	    select
+	    ruleID, rulecode, ruletype, province,city,productcode,serviceprovider,version,pid,gapdays,intervalday,dailychargelimit,monthlychargelimit,
+	    appID,creator,createTime,updater,updateTime,status,apptype
+	     from t_rule where status not in ('Delete') ) c
+	   <dynamic prepend="WHERE">
+	      <isNotNull prepend="AND" property="apptype">
+	        	apptype = #apptype#
+	      </isNotNull>	   
+	      <isNotNull prepend="AND" property="province">
+	        	province = #province#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="city">
+	        	city = #city#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="productcode">
+	        	productcode = #productcode#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="version">
+	        	version = #version#
+	      </isNotNull>	      	  
+	      <isNotNull prepend="AND" property="pid">
+	        	pid = #pid#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="status">
+	        	status = #status#
+	      </isNotNull>		
+	      <!-- 
+	      <isGreaterThan prepend="AND" property="gapdays" compareValue="0">
+	         	gapdays <= #gapdays#
+	      </isGreaterThan>
+	       -->
+	    </dynamic>
+	  order by updateTime desc
+	</select>
+     
+     
+    <select id="getRuleByCityAndVersion" parameterClass="com.dolphin.webapp.vo.RuleSearchVO" resultMap="Rule">
+      <![CDATA[
+		    select
+		    ruleID, rulecode, ruletype, province,city,productcode,serviceprovider,version,pid,gapdays,intervalday,dailychargelimit,monthlychargelimit,
+		    appID,creator,createTime,updater,updateTime,status,apptype
+		     from t_rule     
+			where city = #city# and  productcode = #productcode# and version = #version# and ruletype = 'rule4city' 
+			and status not in ('Delete')   
+			order by updateTime desc 
+		]]>   	
+     </select>
+     
+      <select id="getRuleByProductAndVersion" parameterClass="com.dolphin.webapp.vo.RuleSearchVO" resultMap="Rule">
+      <![CDATA[
+		    select
+		    ruleID, rulecode, ruletype, province,city,productcode,serviceprovider,version,pid,gapdays,intervalday,dailychargelimit,monthlychargelimit,
+		    appID,creator,createTime,updater,updateTime,status,apptype
+		     from t_rule     
+			where province = 'DEFAULT' and city = 'DEFAULT' and  productcode = #productcode# and version = #version# and ruletype = 'rule4product' 
+			and status not in ('Delete') 
+			order by updateTime desc 
+		]]>   	
+     </select>        
+     
+    <select id="getRuleByVersion" parameterClass="com.dolphin.webapp.vo.RuleSearchVO" resultMap="Rule">
+      <![CDATA[
+		    select
+		    ruleID, rulecode, ruletype, province,city,productcode,serviceprovider,version,pid,gapdays,intervalday,dailychargelimit,monthlychargelimit,
+		    appID,creator,createTime,updater,updateTime,status,apptype
+		     from t_rule 
+			where version = #version#  and ruletype not in ('rule4fstpriority')  and status not in ('Delete') 
+			order by updateTime desc 
+		]]>   	
+     </select>        
+          
+    <select id="getSystemRuleByVersion" resultMap="Rule">
+      <![CDATA[
+		    select
+		    ruleID, rulecode, ruletype, province,city,productcode,serviceprovider,version,pid,gapdays,intervalday,dailychargelimit,monthlychargelimit,
+		    appID,creator,createTime,updater,updateTime,status,apptype
+		     from t_rule      
+			where version = #version# and ruletype = 'rule4fstpriority' and province = 'DEFAULT' and city = 'DEFAULT' and  productcode = 'DEFAULT'
+			 	and apptype= '0' and status not in ('Delete') 
+			order by updateTime desc 
+		]]>   	
+     </select>  
+     
+      <select id="listRuleDailyCharge" parameterClass="com.dolphin.webapp.vo.RptSearchVO" resultMap="RuleDailyAccessSum">
+      select * from (
+		    select a.ruleID, a.currdate, a.hitssum, a.chargesum, a.status, a.dataversion,a.updatetime,b.rulecode ruledesc
+		      from t_rule_daily_sum a, t_rule b
+		     where a.ruleID=b.ruleID and b.status not in ('Delete')  ) c
+		   <dynamic prepend="WHERE">
+			   <isGreaterThan prepend="and" property="ruleID" compareValue="0">
+			        	ruleID = #ruleID#
+			   </isGreaterThan>
+		       <isNotNull prepend="and" property="currdate">
+		        		currdate &gt;= #currdate#
+		       </isNotNull>   	    
+		      <!-- 
+		      <isGreaterThan prepend="AND" property="gapdays" compareValue="0">
+		         	gapdays <= #gapdays#
+		      </isGreaterThan>
+		       -->
+		       
+		    </dynamic>
+		 	 order by currdate desc
+     </select>  
+     
+               
+</sqlMap>

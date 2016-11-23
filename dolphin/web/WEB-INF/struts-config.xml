@@ -1,0 +1,190 @@
+
+
+<!DOCTYPE struts-config PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+	"http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+		<form-bean name="loginForm" type="com.dolphin.webapp.sms.login.LoginForm" />
+		<form-bean name="accessForm" type="com.dolphin.webapp.sms.access.AccessForm" />
+		<form-bean name="ruleForm" type="com.dolphin.webapp.sms.rule.RuleForm" />
+		<form-bean name="scriptForm" type="com.dolphin.webapp.sms.script.ScriptForm" />
+		<form-bean name="appForm" type="com.dolphin.webapp.sms.app.AppForm" />
+		<form-bean name="uploadForm" type="com.dolphin.webapp.sms.app.UploadForm" />
+		<form-bean name="systemRuleForm" type="com.dolphin.webapp.sms.system.SystemRuleForm" />
+		<form-bean name="searchAccessForm" type="com.dolphin.webapp.sms.access.SearchAccessForm" />
+		
+	</form-beans><form-bean name="rptForm" type="com.dolphin.webapp.sms.rpt.ReportForm" />
+		ans>
+	<global-forwards>
+		<forward name="index" path="/index.jsp"/>
+		<forward name="success" path="/jsp/success.jsp"/>
+
+	</global-forwards>
+	<action-mappings>
+		<action path="/login" name="loginForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="target" path="/main.jsp" />
+		</action>
+		<action path="/logout" name="loginForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+		</action>
+		<action path="/LoadCodeTableAction" name="loginForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+		</action>	
+		<action path="/listAccessResult" name="searchAccessForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/access/listaccess.jsp" />
+		</action>
+		<action path="/viewAccessResponse" name="searchAccessForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="view" path="/jsp/access/detail.jsp" />
+		</action>		
+		<action path="/access" name="accessForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+		</action>
+	
+		<action path="/updatephoneno" name="accessForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+		</action>	
+	
+		
+		<action path="/listAllRules" name="rule<action path="/resetAllPhonesCitiesmework.web.struts.DelegatingActionProxy" scope="request">
+		</action>	
+	
+		
+		<action path="/listAllRules" name="rule<action path="/confirmchargemework.web.struts.DelegatingActionProxy" scope="request">
+		</action>	
+	
+		
+		<action path="/listAllRules" name="leFormeForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/rule/listrule.jsp" />
+		</action>
+		<action path="/createRule" name="ruleForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="rule4city" path="/jsp/rule/rule_city.jsp" />
+			<forward contextRelative="true" name="rule4product" path="/jsp/rule/rule_product.jsp" />
+			<forward contextRelative="true" name="rule4version" path="/jsp/rule/rule_version.jsp" />
+		</action>
+		<action path="/updateRule" name="ruleF	<forward contextRelative="true" name="rule4fstpriority" path="/jsp/rule/rule_firstst_priority name="ruleFo	<forward contextRelative="true" name="rule4multicity" path="/jsp/rule/rule_multi_cty name="ruleForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="rule4city" path="/jsp/rule/rule_city.jsp" />
+			<forward contextRelative="true" name="rule4product" path="/jsp/rule/rule_product.jsp" />
+			<forward contextRelative="true" name="rule4version" path="/jsp/rule/rule_version.jsp" />
+		</action>
+		<action path="/saveRule" name="ruleForm" ty	<forward contextRelative="true" name="rule4fstpriority" path="/jsp/rule/rule_firstst_priorityruleForm" typ	<forward contextRelative="true" name="rule4multicity" path="/jsp/rule/rule_multi_ctyruleForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/rule/listrule.jsp" />
+		</action>
+		
+		<action path="/listAllScripts" name="scriptForm" type="org.springframework.disabluts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/rule/listrule.jsp" />
+		</action>
+		
+		<action path="listAllRules.do" />
+		</action>		e="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/script/listScript.jsp" />
+		</action>
+		<action path="/createScript" name="scriptForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="create" path="/jsp/script/script.jsp" />
+		</action>
+		<action path="/updateScript" name="scriptForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="edit" path="/jsp/script/script.jsp" />
+		</action>
+		<action path="/saveScript" name="scriptForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/listAllScripts.do" />
+		</action>
+		
+		<action path="/enterSystemRule" name="systemRuleForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="edit" path="/jsp/system/systemrule.jsp" />
+		</action>		
+		<action path="/saveSystemRule" name="systemRuleForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="edit" path="/jsp/system/systemrule.jsp" />
+		</action>	
+				
+		<action path="/listAllApps" name="appForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/app/listapp.jsp" />
+		</action>
+		<action path="/createApp" name="appForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="create" path="/jsp/app/app.jsp" />
+		</action>
+		<action path="/updateApp" name="appForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="edit" path="/jsp/app/app.jsp" />
+		</action>
+		<action path="/saveApp" name="appForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/listAllApps.do" />
+			
+		</action>
+		<action path="/uploadApp" name="appForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="upload" path="/jsp/app/uploadApp.jsp"/>
+		</action>
+		<action path="/submitAppFile" name="uploadForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/listAllApps.do" />
+		</action>
+		<action path="/downloadAppFile" name="appForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+		</action>
+		<action path="/removeAppFile" name="appForm" type="org.springframework.web.struts.DelegatingActionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/listAllApps.do" />
+		</action>	
+				
+	</action-mappings>
+	
+</struts-config>
+	<!-- Report -->		
+		<action path="/listDailyCharge" name="rptionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/rule/listrule.jsp" />
+		</action>
+		
+		<result" path="/jsp/rpt/listdailycharge.jsp"/>
+		</action>
+		<action path="/listMonthlyCharge" name="rptionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/rule/listrule.jsp" />
+		</action>
+		
+		<result" path="/jsp/rpt/listmonthlycharge.jsp"/>
+		</action>
+		<action path="/listDailyDtlCharge" name="rptionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/rule/listrule.jsp" />
+		</action>
+		
+		<result" path="/jsp/rpt/listdailydtl.jsp"/>
+		</action>
+		<action path="/listMonthlyDtlCharge" name="rptionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/r<forward contextRelative="true" name="result" path="/jsp/rpt/listmonthlydtl.jsp"/>
+		</action>	
+		<action path="/listAccessStatis" name="rptionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/r<forward contextRelative="true" name="result" path="/jsp/rpt/listaccessstatis.jsp"/>
+		</action>	
+		<action path="/listchargeconfirm" name="rptionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/rule/listrule.jsp" />
+		</action>
+		
+		<result" path="/jsp/rpt/listchargeconfirm.jsp"/>
+		</action>		
+		
+		<action path="/listPhonesRpt" name="rptionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/rule/listrule.jsp" />
+		</action>
+		
+		<result" path="/jsp/rpt/listphones.jsp"/>
+		</action>			
+		
+		<!-- 通道 -->
+		<action path="/listAllChannels" name="channelionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/rule/listrule.jsp" />
+		</action>
+		
+		<action path="/lischannel/listchannel.jsp" />
+		</action>
+		<action path="/createChannel" name="channelionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/rule/listrule.jsp" />
+		</action>
+		
+		<create" path="/jsp/channel/channel.jsp" />
+		</action>
+		<action path="/updateChannel" name="channelionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/rule/listrule.jsp" />
+		</action>
+		
+		<edit" path="/jsp/channel/channel.jsp" />
+		</action>
+		<action path="/saveChannel" name="channelionProxy" scope="request">
+			<forward contextRelative="true" name="list" path="/jsp/rule/listrule.jsp" />
+		</action>
+		
+		<action path="listAllChannels.do" />	
+		</action>
+				
+	</action-mappings>
+	
+</struts-config>

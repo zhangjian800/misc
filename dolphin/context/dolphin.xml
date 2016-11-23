@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context  antiJARLocking="true" antiResourceLocking="true">
+	<!-- note: the following resource name is set up to use the inet jdbc driver.  If you are
+		using a different driver, then you will have to change the driverClassName.
+		You will have to change the url (the ip and db identifier part), username and password
+		entries for your environment.
+		-->
+	<Resource name="jdbc/dolphin" auth="Container" type="javax.sql.DataSource" username="root" password="P@ss123"
+								 driverClassName="com.mysql.jdbc.Driver" 
+								url="jdbc:mysql://127.0.0.1:3306/sms" maxActive="20" maxIdle="10"
+									maxWait="-1" validationQuery="SELECT 1 from DUAL"/>
+</Context>	

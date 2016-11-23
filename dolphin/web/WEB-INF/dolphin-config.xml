@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<sqlMap resource="conf/sqlmaps/User.xml"/>
+	<sqlMap resource="conf/sqlmaps/App.xml"/>
+	<sqlMap resource="conf/sqlmaps/Script.xml"/>
+	<sqlMap resource="conf/sqlmaps/Rule.xml"/>
+	<sqlMap resource="conf/sqlmaps/Access.xml"/>
+	<sqlMap resource="conf/sqlmaps/Public.xml"/>
+	<sqlMap resource="conf/sqlmaps/Ads.xml"/>
+	<sqlMap resource="conf/sqlmaps/Charge.xml"/>
+</sqlMapConfig>

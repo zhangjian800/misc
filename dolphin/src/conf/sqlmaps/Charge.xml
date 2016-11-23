@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<resultMap id="PhoneCharge"
+		class="com.dolphin.webapp.vo.PhoneCharge">
+		<result property="chargeID" column="chargeID" />
+		<result property="imsi" column="imsi" />
+		<result property="producttype" column="producttype" />
+		<result property="version" column="version" />
+		<result property="province" column="province" />
+		<result property="city" column="city" />
+		<result property="mobile" column="mobile" />
+		<result property="linkid" column="linkid" />
+		<result property="receivetime" column="receivetime" />
+		<result property="content" column="content" />
+		<result property="accessID" column="accessID" />
+		<result property="channelID" column="channelID" />
+		<result property="ruleID" column="ruleID" />
+		<result property="result" column="result" />
+		<result property="yearmonth" column="yearmonth" />
+		<result property="currdate" column="currdate" />		
+		<result property="failmount" column="failmount" />				
+	</resultMap>
+	
+	
+	<resultMap id="RptStatResult2"
+		class="com.dolphin.webapp.vo.RptStatResult">
+		<result property="column1" column="column1" />
+		<result property="count" column="count" />
+	</resultMap>
+	
+	<resultMap id="RptStatResult3"
+		class="com.dolphin.webapp.vo.RptStatResult">
+		<result property="column1" column="column1" />
+		<result property="column1" column="column2" />
+		<result property="count" column="count" />
+	</resultMap>
+	
+	
+	<insert id="insertPhoneCharge" parameterClass="com.dolphin.webapp.vo.PhoneCharge">
+		INSERT INTO t_phone_charge (mobile, linkid, receivetime, content, imsi, producttype, version, province, city, updatetime,accessID,channelID,ruleID,yearmonth,currdate, failmount, result)
+		 VALUES (#mobile#,#linkid#,#receivetime#,#content#,#imsi#,#producttype#,#version#,#province#,#city#,#updatetime#,#accessID#,#channelID#,#ruleID#,#yearmonth#,#currdate#, #failmount#,#result#)
+	   	<selectKey resultClass="long" keyProperty="chargeID" > 
+			SELECT @@IDENTITY AS chargeID 
+	   	</selectKey> 
+	</insert>
+		
+    <select id="listConfirmCharge" parameterClass="com.dolphin.webapp.vo.ConfirmChargeRptSearchVO" resultMap="PhoneCharge">
+    	select * from (
+		select chargeID,mobile,linkid,receivetime,content,imsi,
+				producttype,version,province,city,channelID,ruleID,accessID,result,currdate,yearmonth,failmount
+		from t_phone_charge
+	   <dynamic prepend="WHERE">
+	      <isNotNull prepend="AND" property="imsi">
+	        	a.imsi = #imsi#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="mobile">
+	        	a.mobile = #mobile#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="version">
+	        	b.version = #version#
+	      </isNotNull>	      
+	      <isNotNull prepend="AND" property="province">
+	        	b.province = #province#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="city">
+	        	b.city = #city#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="yearmonth">
+	        	accesstimeym = #yearmonth#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="beginUpdateTime">
+	        	updatetime &gt;= #beginUpdateTime#
+	      </isNotNull>   	    
+	       <isNotNull prepend="AND" property="endUpdateTime">
+	        	updatetime &lt;= #endUpdateTime#
+	      </isNotNull> 
+	    </dynamic>
+	 	 order by updatetime desc
+	 	 ) c LIMIT 0, #maxlimit#
+    </select>	   
+		
+    <select id="getFailmountByIMSIAndMonthy" parameterClass="java.util.Map" resultClass="java.lang.Float">
+		select sum(failmount) from t_phone_charge where yearmonth = #yearmonth# and imsi=#imsi# and result='FAIL'
+    </select>	
+       		
+    <select id="getFailmountByRuleAndDate" parameterClass="java.util.Map" resultClass="java.lang.Float">
+		select sum(failmount) from t_phone_charge where ruleID = #ruleID# and currdate=#currdate# and result='FAIL'
+    </select>
+    
+    <select id="getFailmountByRuleAndMonthy" parameterClass="java.util.Map" resultClass="java.lang.Float">
+		select sum(failmount) from t_phone_charge where ruleID = #ruleID# and yearmonth = #yearmonth# and result='FAIL'
+    </select>
+    
+    <select id="getPhoneChargeStatis" parameterClass="java.util.Map" resultMap="RptStatResult2">>
+		select result column1, sum(failmount) count from t_phone_charge where currdate=#currdate# and ruleID = #ruleID# group by result
+    </select>	
+   <select id="getChargeAccessStatis" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		select count(*) from t_access where respstatus='SUCCESS_CHAEGE' and currdate=#currdate# and ruleID = #ruleID#
+    </select>	
+    
+    <select id="getAccessStatis" parameterClass="java.util.Map" resultMap="RptStatResult2">
+		select respstatus column1 , count(*) count from t_access group by respstatus
+    </select>	
+    
+    <select id="getPhonestatByVersion" parameterClass="java.util.Map" resultMap="RptStatResult2">
+		select version column1, count(*) count from t_phone group by version
+    </select>	
+    
+    <select id="getPhonestatByProvinceCity" parameterClass="java.util.Map" resultMap="RptStatResult3">
+		select province column1, city column2, count(*)  count from t_phone group by province, city
+    </select>	    
+        
+    <select id="getPhonestatByProvinceServiceProvider" parameterClass="java.util.Map" resultMap="RptStatResult3">
+		select province column1, serviceprovider column2,count(*) count from t_phone group by province,serviceprovider
+    </select>	    
+</sqlMap>

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<resultMap id="Access"
+		class="com.dolphin.webapp.vo.Access">
+		<result property="accessID" column="accessID" />
+		<result property="imsi" column="imsi" />
+		<result property="productType" column="producttype" />
+		<result property="version" column="version" />
+		<result property="pid" column="pid" />
+		<result property="smsc" column="smsc" />
+		<result property="province" column="province" />
+		<result property="city" column="city" />
+		<result property="lbs" column="lbs" />
+		<result property="platformType" column="platformtype" />
+		<result property="responseScriptContent" column="respscriptcontent" />
+		<result property="responseStatus" column="respstatus" />
+		<result property="responesAppID" column="respappid" />
+		<result property="gapdays" column="gapdays" />
+		<result property="accesstimeym" column="accesstimeym" />
+		<result property="accessTime" column="accessTime" javaType="java.util.Date" />
+		<result property="requestStr" column="requeststring" />
+		<result property="adsdetailID" column="adsdetailID" />
+		<result property="interval" column="intervalmins" />
+		<result property="ruleID" column="ruleID" />
+		<result property="currdate" column="currdate" />		
+	</resultMap>
+		
+	<resultMap id="AccessMain"
+		class="com.dolphin.webapp.vo.AccessMain">
+		<result property="imsi" column="imsi" />
+		<result property="productType" column="producttype" />
+		<result property="version" column="version" />
+		<result property="smsc" column="smsc" />
+		<result property="phoneno" column="phoneno" />
+		<result property="province" column="province" />
+		<result property="city" column="city" />
+		<result property="status" column="status"/>
+		<result property="publishDate" column="publishDate" javaType="java.util.Date" />
+		<result property="firstAccessTime" column="firstAccessTime" javaType="java.util.Date" />
+		<result property="serviceprovider" column="serviceprovider"/>
+		<result property="flag4specialrule" column="flag4specialrule" />
+	</resultMap>	
+	
+	<resultMap id="AccessSum"
+		class="com.dolphin.webapp.vo.AccessSum">
+		<result property="imsi" column="imsi" />
+		<result property="yearmonth" column="yearmonth" />
+		<result property="maxhits" column="maxhits" />
+		<result property="maxcharge" column="maxcharge" />
+		<result property="chargstatus" column="chargstatus"/>
+		<result property="hitsstatus" column="hitsstatus"/>
+		<!-- <result property="updatetime" column="updatetime" javaType="java.util.Date" /> -->
+		<result property="dataversion" column="dataversion" />		
+		<result property="correctfailmount" column="correctfailmount" />
+		<result property="times" column="times" />
+		<result property="chargeids" column="chargeids" />
+		<result property="flag4specialrule" column="flag4specialrule" />
+	</resultMap>	
+		
+	<resultMap id="RuleMonthlyAccessSum"
+		class="com.dolphin.webapp.vo.RuleAccessMonthlyCharge">
+		<result property="ruleID" column="ruleID" />
+		<result property="yearmonth" column="yearmonth" />
+		<result property="hitssum" column="hitssum" />
+		<result property="chargesum" column="chargesum" />
+		<result property="status" column="status"/>
+		<result property="updatetime" column="updatetime" javaType="java.util.Date" />
+		<result property="dataversion" column="dataversion" />
+	</resultMap>	
+	
+	<resultMap id="RuleDailyAccessSum"
+		class="com.dolphin.webapp.vo.RuleAccessDailyCharge">
+		<result property="ruleID" column="ruleID" />
+		<result property="currdate" column="currdate" />
+		<result property="hitssum" column="hitssum" />
+		<result property="chargesum" column="chargesum" />
+		<result property="status" column="status"/>
+		<result property="updatetime" column="updatetime" javaType="java.util.Date" />
+		<result property="dataversion" column="dataversion" />
+	</resultMap>	
+			
+    <select id="findPhoneAccessMainByIMSI" resultMap="AccessMain">
+      <![CDATA[
+	    select
+		imsi, producttype, version, smsc, phoneno, province, city, status, publishDate, firstAccessTime,serviceprovider,flag4specialrule
+	    from t_phone
+	    where imsi = #imsi#                       
+		]]>
+    </select>	
+    
+    <select id="findNeedHandlePhoneAccessMain" resultMap="AccessMain">
+      <![CDATA[
+	    select
+		imsi, producttype, version, smsc, phoneno, province, city, status, publishDate, firstAccessTime,serviceprovider,flag4specialrule
+	    from t_phone
+	    where phoneNo is not null and (city is null or city = 'DEFAULT')  limit 1, 1000                
+		]]>
+    </select>	
+        
+	<insert id="insertPhoneAccessMain" parameterClass="com.dolphin.webapp.vo.AccessMain">
+		INSERT INTO t_phone (imsi, producttype, version, smsc, phoneno, province, city, status, publishDate, firstAccessTime,serviceprovider,flag4specialrule)
+		 VALUES (#imsi#,#productType#,#version#,#smsc#,#phoneno#,#province#,#city#,#status#,#publishDate#,#firstAccessTime#,#serviceprovider#,#flag4specialrule#)
+	</insert>
+	    
+    <update id="updatePhoneNum" parameterClass="com.dolphin.webapp.vo.AccessMain">
+		UPDATE t_phone SET phoneno=#phoneno#,province=#province#, city=#city#,serviceprovider=#serviceprovider#,flag4specialrule=#flag4specialrule#
+		 WHERE imsi = #imsi#
+	</update>  
+	
+	<update id="disablePhones">
+		UPDATE t_phone SET status='Block'
+		 WHERE where imsi in (#imsis#);
+	</update>   		
+	
+    <select id="getSuccessHitSumByIMSIAndYearMonth" parameterClass="com.dolphin.webapp.vo.AccessSum" resultClass="java.lang.Integer">
+      <![CDATA[
+		    select count(*)  
+		    from t_access
+		    where imsi = #imsi# and accesstimeym= #yearmonth#  and respstatus ='SUCCESS'                 
+		]]>
+    </select>
+     
+    <select id="findAccessSum" parameterClass="com.dolphin.webapp.vo.AccessSum" resultMap="AccessSum">
+      <![CDATA[
+	    select imsi, yearmonth, maxhits, maxcharge,hitsstatus, chargstatus, dataversion, correctfailmount, times, chargeids,flag4specialrule
+	    from t_access_sum
+	    where imsi = #imsi# and yearmonth= #yearmonth#  limit 1                   
+		]]>
+    </select>
+		 
+    <insert id="insertAccessSum" parameterClass="com.dolphin.webapp.vo.AccessSum">
+      <![CDATA[
+			INSERT INTO t_access_sum (imsi, yearmonth, maxhits, maxcharge)
+			 VALUES (#imsi#,#yearmonth#,#maxhits#,#maxcharge#)
+		]]>
+    </insert>
+
+	<update id="updateAccessSum" parameterClass="com.dolphin.webapp.vo.AccessSum">
+		UPDATE t_access_sum SET maxhits=#maxhits#,maxcharge=#maxcharge#,chargstatus=#chargstatus#,hitsstatus=#hitsstatus#,dataversion=#dataversion#,
+				correctfailmount = #correctfailmount#, times = #times#, chargeids = #chargeids#, flag4specialrule = #flag4specialrule#
+		 WHERE imsi = #imsi# and yearmonth=#yearmonth#
+	</update>      
+	
+    
+    <select id="findRuleAccessMonthlySumByRuleID" parameterClass="com.dolphin.webapp.vo.RuleAccessMonthlyCharge" resultMap="RuleMonthlyAccessSum">
+      <![CDATA[
+	    select ruleID, yearmonth, hitssum, chargesum, status, dataversion,updatetime
+	    from t_rule_monthly_sum
+	    where ruleID = #ruleID# and yearmonth= #yearmonth#  limit 1                   
+		]]>
+    </select>
+            
+    <insert id="insertRuleAccessMonthlySum" parameterClass="com.dolphin.webapp.vo.RuleAccessMonthlyCharge">
+      <![CDATA[
+			INSERT INTO t_rule_monthly_sum (ruleID, yearmonth, hitssum, chargesum, status, dataversion,updatetime)
+			 VALUES (#ruleID#,#yearmonth#,#hitssum#,#chargesum#,#status#,#dataversion#,#updatetime#)
+		]]>
+    </insert>
+    
+	<update id="updateRuleAccessMonthlySum" parameterClass="com.dolphin.webapp.vo.RuleAccessMonthlyCharge">
+		UPDATE t_rule_monthly_sum SET hitssum=#hitssum#,chargesum=#chargesum#,status=#status#,dataversion=#dataversion#,updatetime=#updatetime#
+		 where ruleID = #ruleID# and yearmonth= #yearmonth#
+	</update>      
+	
+	
+    <select id="findRuleAccessDailySumByRuleID" parameterClass="com.dolphin.webapp.vo.RuleAccessDailyCharge" resultMap="RuleDailyAccessSum">
+      <![CDATA[
+	    select ruleID, currdate, hitssum, chargesum, status, dataversion,updatetime
+	    from t_rule_daily_sum
+	    where ruleID = #ruleID# and currdate = #currdate#               
+		]]>
+    </select>
+            
+    <insert id="insertRuleAccessDailySum" parameterClass="com.dolphin.webapp.vo.RuleAccessDailyCharge">
+      <![CDATA[
+			INSERT INTO t_rule_daily_sum (ruleID, currdate, hitssum, chargesum, status, dataversion,updatetime)
+			 VALUES (#ruleID#,#currdate#,#hitssum#,#chargesum#,#status#,#dataversion#,#updatetime#)
+		]]>
+    </insert>
+    
+	<update id="updateRuleAccessDailySum" parameterClass="com.dolphin.webapp.vo.RuleAccessDailyCharge">
+		UPDATE t_rule_daily_sum SET hitssum=#hitssum#,chargesum=#chargesum#,status=#status#,dataversion=#dataversion#,updatetime=#updatetime#
+		 where ruleID = #ruleID# and currdate= #currdate#
+	</update>      
+			 
+    <select id="findAccessByPK" resultMap="Access">
+      <![CDATA[
+	    select
+		accessID,imsi,producttype,version,pid, smsc, province, city, lbs,platformtype,accessTime,respscriptcontent,respstatus,respappid,gapdays,accesstimeym,requeststring,adsdetailID,intervalmins,ruleID,currdate
+	    from t_access
+	    where accessID = #accessID#                       
+		]]>
+    </select>	
+    
+    <select id="listAllAccess" resultMap="Access">
+      <![CDATA[
+	    select
+		accessID,imsi,producttype,version,pid, smsc, province, city, lbs,platformtype,accessTime,respscriptcontent,respstatus,respappid,gapdays,accesstimeym,requeststring,adsdetailID,intervalmins,ruleID,currdate
+	    from t_access      
+		]]>
+    </select>	
+    
+    
+    <select id="findAccessBySearchVO" parameterClass="com.dolphin.webapp.vo.AccessSearchVO" resultMap="Access">
+    	select * from (
+	    select
+		accessID,imsi,producttype,version,pid, smsc, province, city, lbs,platformtype,accessTime,respscriptcontent,respstatus,respappid,gapdays,accesstimeym,requeststring,adsdetailID,intervalmins,ruleID,currdate
+	    from t_access   
+	   <dynamic prepend="WHERE">
+	      <isNotNull prepend="AND" property="imsi">
+	        	imsi = #imsi#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="respstatus">
+	        	respstatus = #respstatus#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="version">
+	        	version = #version#
+	      </isNotNull>	      
+	      <isNotNull prepend="AND" property="productcode">
+	        	producttype = #productcode#
+	      </isNotNull>	      
+	      <isNotNull prepend="AND" property="province">
+	        	province = #province#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="city">
+	        	city = #city#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="yearmonth">
+	        	accesstimeym = #yearmonth#
+	      </isNotNull>
+	      <isNotNull prepend="AND" property="beginAccessTime">
+	        	accessTime &gt;= #beginAccessTime#
+	      </isNotNull>   	    
+	       <isNotNull prepend="AND" property="endAccessTime">
+	        	accessTime &lt;= #endAccessTime#
+	      </isNotNull> 
+	       <isNotNull prepend="AND" property="currdate">
+	        	currdate = #currdate#
+	      </isNotNull> 	      
+	      <isGreaterThan prepend="AND" property="ruleID" compareValue="0">
+	         	ruleID = #ruleID#
+	      </isGreaterThan>
+	    </dynamic>
+	 	 order by accessTime desc
+	 	 ) b LIMIT 0, #maxlimit#
+    </select>	    
+    
+    
+	<insert id="insertAccess" parameterClass="com.dolphin.webapp.vo.Access">
+		INSERT INTO t_access (imsi,producttype,version,pid, smsc,province,city,lbs,platformtype,accesstime,requeststring,respscriptcontent,respstatus,respappid,gapdays,intervalmins,accesstimeym,adsdetailID,ruleID,currdate) 
+		 VALUES (#imsi#,#productType#,#version#,#pid#,#smsc#,#province#,#city#,#lbs#,#platformType#,#accessTime#,#requestStr#, #responseScriptContent#,#responseStatus#,#responesAppID#, #gapdays#,#interval#, #accesstimeym#, #adsdetailID#,#ruleID#,#currdate#)
+	   <selectKey resultClass="int" keyProperty="accessID" > 
+			SELECT @@IDENTITY AS accessID 
+	   </selectKey> 
+	</insert>
+	
+    <delete id="deleteAccessByPK">
+		DELETE from t_access
+		WHERE accessID = #accessID#      
+   	</delete>
+    
+</sqlMap>

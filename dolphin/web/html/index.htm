@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<script type="text/javascript" src="../js/jquery-1.6.1.js">
+</script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8,chrome=1" />
+<title>Login Page</title>
+<link type="text/css" href="../css/main.css" rel="stylesheet">
+
+<script type="text/javascript"> 
+	 var submit = function(){
+		alert("test-----------");
+		var email = $("#email").val();	 	
+	 	if(email=="" || email.length==0){
+	 		alert("Please Input email !");
+			return;
+	 	}
+		var password = $("#password").val();	 	
+	 	if(password=="" || password.length==0){
+	 		alert("Please Input password !");
+			return;
+	 	}		
+		$("#loginForm").submit();
+ 	
+	 };
+</script>
+</head>
+
+<body>
+<div id="container">
+<div id="wrapper">
+<div id="header">
+	<div class="top clearfix">
+		<h1>
+		  	<img height="40" alt="Cisco WebEx Meet" src="../img/dolphin.png">
+          </a>
+		  </h1> 
+				<div class="top-action top-action-nologin"> 
+		</div>	
+	</div>
+	<div id="nav" style="height:5px;"></div>
+</div>	
+<!--Main body-->
+<div id="loginPage" class="container-16 clearfix login-main-body">
+                
+   <div id="login_screen" class="wwf-content login-body">
+         <h1 class="login-sign-title">Login</h1>        
+		 <form name="loginForm" id="loginForm" action="/dolphin/login.do" method="POST">
+		 <div class="login-form">
+			Email: <input type="text" id="email" name="email" />
+		 </div>   
+		 <div class="login-form">
+			Password: <input type="password" id="password" name="password" />
+		 </div> 
+		 
+		 </form>
+		 		 <div>
+			 <input type="button" name="login" value="login" onclick="submit()"/>
+		 </div> 
+   </div>
+</div>
+<!--End main body-->
+<!--foot start-->
+
+<div id="footer">
+	<p class="webexball"></p>
+			<div class="footer-content"></div>
+     <a id="footercisco" href="https://www.xxxx.com" class="cisco" target="_blank">
+		  <img alt="Cisco" width="46" height="24" src="../img/foot.png" />
+	   </a>
+</div>
+<!--foot end-->
+   </body>
+</html>

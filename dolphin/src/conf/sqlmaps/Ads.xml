@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+
+	<resultMap id="AdsMain"
+		class="com.dolphin.webapp.vo.Ads">
+		<result property="adsID" column="adsID" />
+		<result property="instanceID" column="instanceID" />
+		<result property="size" column="size" />
+		<result property="seq" column="seq" />
+		<result property="adsprovider" column="adsprovider" />
+		<result property="adscontent" column="adscontent" />
+		<result property="status" column="status" />
+		<result property="adsproviderurl" column="adsproviderurl" />
+		<result property="yearmonth" column="yearmonth" />		
+		<result property="generatetime" column="generatetime" javaType="java.util.Date" />
+	</resultMap>
+		
+	<resultMap id="AdsDetail"
+		class="com.dolphin.webapp.vo.AdsDetailContent">
+		<result property="detailID" column="detailID" />
+		<result property="adsID" column="adsID" />
+		<result property="seq" column="seq" />
+		<result property="targetphonenum" column="targetphonenum" />
+		<result property="adscontent" column="adscontent" />
+		<result property="status" column="status" />
+		<result property="adsprovider" column="adsprovider" />
+		<result property="yearmonth" column="yearmonth" />		
+		<result property="generatetime" column="generatetime" javaType="java.util.Date" />
+		
+	</resultMap>	
+	
+    <insert id="insertAdsMain" parameterClass="com.dolphin.webapp.vo.Ads">
+		INSERT INTO t_ads (adsID, instanceID,size,seq,adsprovider,adscontent,status,generatetime,adsproviderurl,yearmonth)
+				  VALUES (#adsID#, #instanceID#,#size#,#seq#,#adsprovider#,#adscontent#,#status#,#generatetime#,#adsproviderurl#,#yearmonth#)
+	   	<selectKey resultClass="int" keyProperty="adsID" > 
+			SELECT @@IDENTITY AS adsID 
+	   	</selectKey> 
+    </insert>
+    
+	<update id="updateAdsMain" parameterClass="com.dolphin.webapp.vo.Ads">
+		UPDATE t_ads SET seq=#seq#,status=#status#
+		 WHERE adsID = #adsID#
+	</update>     
+	    
+    <insert id="insertAdsDetail" parameterClass="com.dolphin.webapp.vo.AdsDetailContent">
+		INSERT INTO t_ads_detail (detailID, adsID,seq,targetphonenum,adscontent,status,adsprovider,yearmonth,generatetime)
+				  VALUES (#detailID#,#adsID#,#seq#,#targetphonenum#,#adscontent#,#status#,#adsprovider#,#yearmonth#,#generatetime#)
+    </insert>    
+    	
+   <insert id="commitAdsDetail">
+		UPDATE t_ads_detail SET status='COMPLETE'
+		 WHERE detailID = #detailID# 
+    </insert>  
+        	
+    <select id="findAdsMainByInstanceID" resultMap="AccessMain">
+      <![CDATA[
+	    select
+		adsID, instanceID,size,seq,adsprovider,adscontent,status,generatetime,adsproviderurl,yearmonth
+	    from t_ads
+	    where instanceID = #instanceID# and status in ('New','Process')                      
+		]]>
+    </select>	
+    
+    	
+    <select id="findUnfinishAdsDetail" resultMap="AdsDetail">
+      <![CDATA[
+	    select
+		detailID, a.adsID,a.seq,targetphonenum,a.adscontent,a.status,a.adsprovider,a.yearmonth,a.generatetime
+	    from t_ads_detail a , t_ads b
+	    where a.adsID = b.adsID and b.instanceID=#instanceID# and a.status = 'New'                  
+		]]>
+    </select>	
+        
+</sqlMap>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC  "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean name="/login" class="com.dolphin.webapp.sms.login.LoginAction">
+		 <property name="loginMgr" ref="loginMgr" />		
+	</bean> 
+	
+	<bean name="/logout" class="com.dolphin.webapp.sms.login.LogoutAction">
+	</bean> 
+		
+	<bean name="/LoadCodeTableAction" class="com.dolphin.webapp.sms.pub.LoadCodeTableAction">
+		 <property name="ruleMgr" ref="ruleMgr" />
+		 <property name="appMgr" ref="appMgr" />		
+		 <property name="scriptMgr" ref="scriptMgr" />
+		 <property name="pubMgr" ref="pubMgr" />
+	</bean> 
+			
+	<bean name="/listAccessResult" class="com.dolphin.webapp.sms.access.ListAccessAction">
+		 <property name="accessMgr" ref="accessMgr" />
+		 <property name="pubMgr" ref="pubMgr" />		
+	</bean> 
+	
+	<bean name="/viewAccessResponse" class="com.dolphin.webapp.sms.access.LoadAccessResponseAction">
+		 <property name="accessMgr" ref="accessMgr" />
+		 <property name="pubMgr" ref="pubMgr" />		
+	</bean> 
+	
+	<bean name="/access" class="com.dolphin.webapp.sms.access.GenerateAccessAction">
+		 <property name="accessMgr" ref="accessMgr" />		
+	</bean> 
+	
+	<bean name="/updatephoneno" class="com.dolphin.webapp.sms.access.UpdatePhoneNumAction">
+		 <property name="accessMgr" ref="accessMgr" />		
+	</bean> 
+		
+	<bean name="/resetAllPhonesCities" class="com.dolphin.webapp.sms.access.UpdateAllPhonesAction">
+		<property name="accessMgr" ref="accessMgr" />
+		 <property name="ruleMgr" ref="ruleMgr" />
+		 <property name="appMgr" ref="appMgr" />		
+		 <property name="pubMgr" ref="pubMgr" />
+	</bean> 
+			
+	<bean name="/confirmcharge" class="com.dolphin.webapp.sms.access.ConfirmChargeInfoAction">
+		 <property name="accessMgr" ref="accessMgr" />		
+	</bean> 
+			
+	<bean name="/listAllRules" class="com.dolphin.webapp.sms.rule.ListAllRulesAction">
+		<property name="accessMgr" ref="accessMgr" />
+		 <property name="ruleMgr" ref="ruleMgr" />
+		 <property name="appMgr" ref="appMgr" />		
+		 <property name="pubMgr" ref="pubMgr" />		
+	</bean> 
+	<bean name="/createRule" class="com.dolphin.webapp.sms.rule.CreateRuleAction">
+		<property name="accessMgr" ref="accessMgr" />
+		 <property name="ruleMgr" ref="ruleMgr" />
+		 <property name="appMgr" ref="appMgr" />		
+		 <property name="pubMgr" ref="pubMgr" />
+	</bean> 
+	<bean name="/updateRule" class="com.dolphin.webapp.sms.rule.UpdateRuleAction">
+		<property name="accessMgr" ref="accessMgr" />
+		 <property name="ruleMgr" ref="ruleMgr" />
+		 <property name="appMgr" ref="appMgr" />		
+		 <property name="pubMgr" ref="pubMgr" />
+	</bean>	
+	<bean name="/saveRule" class="com.dolphin.webapp.sms.rule.SaveRuleAction">
+		<property name="accessMgr" ref="accessMgr" />
+		 <property name="ruleMgr" ref="ruleMgr" />
+		 <property name="appMgr" ref="appMgr" />		
+		 <property name="pubMgr" ref="pubMgr" />
+	</bean> 
+	<bean name="/disableRule" class="com.dolphin.webapp.sms.rule.DisableRuleAction">
+		<property name="accessMgr" ref="accessMgr" />
+		 <property name="ruleMgr" ref="ruleMgr" />
+		 <property name="appMgr" ref="appMgr" />		
+		 <property name="pubMgr" ref="pubMgr" />
+	</bean>	
+		
+	<bean name="/listAllScripts" class="com.dolphin.webapp.sms.script.ListAllScriptsAction">
+		 <property name="scriptMgr" ref="scriptMgr" />		
+	</bean> 
+	<bean name="/createScript" class="com.dolphin.webapp.sms.script.CreateScriptAction">
+		 <property name="scriptMgr" ref="scriptMgr" />		
+	</bean>
+	<bean name="/saveScript" class="com.dolphin.webapp.sms.script.SaveScriptAction">
+		 <property name="scriptMgr" ref="scriptMgr" />		
+	</bean> 
+	<bean name="/updateScript" class="com.dolphin.webapp.sms.script.UpdateScriptAction">
+		 <property name="scriptMgr" ref="scriptMgr" />		
+	</bean>	
+	
+	<bean name="/listAllApps" class="com.dolphin.webapp.sms.app.ListAllAppsAction">
+		 <property name="appMgr" ref="appMgr" />		
+	</bean> 
+	<bean name="/createApp" class="com.dolphin.webapp.sms.app.CreateAppAction">
+		 <property name="appMgr" ref="appMgr" />	
+		 <property name="pubMgr" ref="pubMgr" />
+	</bean> 
+	<bean name="/updateApp" class="com.dolphin.webapp.sms.app.UpdateAppAction">
+		 <property name="appMgr" ref="appMgr" />	
+		 <property name="pubMgr" ref="pubMgr" />
+	</bean>	
+	<bean name="/saveApp" class="com.dolphin.webapp.sms.app.SaveAppAction">
+		 <property name="appMgr" ref="appMgr" />		
+	</bean>		
+	<bean name="/uploadApp" class="com.dolphin.webapp.sms.app.UploadAppAction">
+		 <property name="appMgr" ref="appMgr" />		
+	</bean>	
+	<bean name="/submitAppFile" class="com.dolphin.webapp.sms.app.SubmitAppFileAction">
+		 <property name="appMgr" ref="appMgr" />		
+	</bean>	
+	
+	<bean name="/downloadAppFile" class="com.dolphin.webapp.sms.app.DownloadAppFileAction">
+		 <property name="appMgr" ref="appMgr" />		
+	</bean>	
+	<bean name="/removeAppFile" class="com.dolphin.webapp.sms.app.RemoveAppFileAction">
+		 <property name="appMgr" ref="appMgr" />		
+	</bean>	
+		
+	<bean name="/enterSystemRule" class="com.dolphin.webapp.sms.system.EnterSystemRuleAction">
+		 <property name="pubMgr" ref="pubMgr" />
+	</bean> 
+	<bean name="/saveSystemRule" class="com.dolphin.webapp.sms.system.SaveSystemRulelAction">
+		 <property name="pubMgr" ref="pubMgr" />
+	</bean>	
+
+	<bean name="/listDailyCharge" class="com.dolphin.webapp.sms.rpt.ListDailyChargeAction">
+		 <property name="accessMgr" ref="accessMgr" />
+		 <property name="pubMgr" ref="pubMgr" />
+		 <property name="appMgr" ref="appMgr" />
+		 <property name="ruleMgr" ref="ruleMgr" />
+	</bean> 
+	
+	<bean name="/listPhonesRpt" class="com.dolphin.webapp.sms.rpt.ListPhonesAction">
+		 <property name="accessMgr" ref="accessMgr" />
+		 <property name="pubMgr" ref="pubMgr" />
+		 <property name="appMgr" ref="appMgr" />
+		 <property name="ruleMgr" ref="ruleMgr" />
+	</bean> 
+	
+	<bean name="/listDailyDtlCharge" class="com.dolphin.webapp.sms.rpt.ListDailyChargeDtlAction">
+		 <property name="accessMgr" ref="accessMgr" />
+		 <property name="pubMgr" ref="pubMgr" />
+		 <property name="appMgr" ref="appMgr" />
+		 <property name="ruleMgr" ref="ruleMgr" />
+	</bean> 
+		
+	<bean name="/listchargeconfirm" class="com.dolphin.webapp.sms.rpt.ListPhoneChargeAction">
+		 <property name="accessMgr" ref="accessMgr" />
+		 <property name="pubMgr" ref="pubMgr" />
+		 <property name="appMgr" ref="appMgr" />
+		 <property name="ruleMgr" ref="ruleMgr" />
+	</bean> 
+	
+	<bean name="/listAllChannels" class="com.dolphin.webapp.sms.channel.ListChannelsAction">
+		 <property name="ruleMgr" ref="ruleMgr" />
+		 <property name="appMgr" ref="appMgr" />		
+		 <property name="pubMgr" ref="pubMgr" />
+	</bean> 	
+			
+	<bean name="/createChannel" class="com.dolphin.webapp.sms.channel.CreateChannelsAction">
+		 <property name="ruleMgr" ref="ruleMgr" />
+		 <property name="appMgr" ref="appMgr" />		
+		 <property name="pubMgr" ref="pubMgr" />
+	</bean> 	
+	
+	<bean name="/updateChannel" class="com.dolphin.webapp.sms.channel.UpdateChannelsAction">
+		 <property name="ruleMgr" ref="ruleMgr" />
+		 <property name="appMgr" ref="appMgr" />		
+		 <property name="pubMgr" ref="pubMgr" />
+	</bean> 	
+	
+	<bean name="/saveChannel" class="com.dolphin.webapp.sms.channel.SaveChannelsAction">
+		 <property name="ruleMgr" ref="ruleMgr" />
+		 <property name="appMgr" ref="appMgr" />		
+		 <property name="pubMgr" ref="pubMgr" />
+	</bean> 	
+	
+		
+</beans>

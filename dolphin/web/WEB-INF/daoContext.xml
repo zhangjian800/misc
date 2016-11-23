@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<!-- 
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<property name="url" value="jdbc:mysql://127.0.0.1:3306/sms?useUnicode=true&amp;characterEncoding=UTF-8"/>
+		<property name="username" value="root"/>
+		<property name="password" value="P@ss123"/>
+	</bean>
+	 -->
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName"><value>java:comp/env/jdbc/dolphin</value></property>
+	</bean>	
+  
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>	
+	<bean id="transactionManagerRootProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" abstract="true">
+		  <property name="transactionManager">
+		   <ref bean="transactionManager"/>
+		  </property>
+		  <property name="proxyTargetClass">
+		   <value>false</value>
+		  </property>
+
+		  <property name="transactionAttributes">
+		   <props>
+		    <prop key="*insert*">PROPAGATION_REQUIRED,-Exception</prop>
+		    <prop key="*update*">PROPAGATION_REQUIRED,-Exception</prop>
+		    <prop key="*upload*">PROPAGATION_REQUIRED,-Exception</prop>
+		    <prop key="*select*">PROPAGATION_SUPPORTS,readOnly</prop>
+		   </props>
+	  	</property>
+	  
+	 </bean>
+  	 <bean id="lobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler"/> 
+
+
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="WEB-INF/dolphin-config.xml"/>
+		<property name="dataSource" ref="dataSource"/>
+		<property name="lobHandler" ref="lobHandler"/>
+	</bean>
+
+	<bean id="userDao" class="com.dolphin.webapp.dao.UserDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	<bean id="accessDao" class="com.dolphin.webapp.dao.AccessDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	<bean id="appDaoBase" class="com.dolphin.webapp.dao.AppDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	
+	<bean id="appDao" parent="transactionManagerRootProxy">
+  		<property name="target">
+   			<ref bean="appDaoBase" />
+  		</property>
+	</bean>
+	
+	<bean id="pubDao" class="com.dolphin.webapp.dao.PublicDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	
+	<bean id="ruleDao" class="com.dolphin.webapp.dao.RuleDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+	<bean id="scriptDao" class="com.dolphin.webapp.dao.ScriptDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+
+	<bean id="adsDao" class="com.dolphin.webapp.dao.AdsDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClient"/>
+	</bean>
+</beans>
